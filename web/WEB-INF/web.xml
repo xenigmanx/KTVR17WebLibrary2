@@ -8,4 +8,14 @@
     <welcome-file-list>
         <welcome-file>welcome.jsp</welcome-file>
     </welcome-file-list>
+    <jsp-config>
+        <jsp-property-group>
+            <display-name>template1</display-name>
+            <url-pattern>/showLogin.jsp</url-pattern>
+            <url-pattern>/welcome.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>
+            <include-coda>/WEB-INF/jspf/footter.jspf</include-coda>
+        </jsp-property-group>
+    </jsp-config>
 </web-app>
