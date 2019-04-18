@@ -13,7 +13,7 @@
         <p>Для администратора:</p>
         <a href="newBook">добавить книгу</a><br>
         <a href="showReaders">Список читателей</a><br>
-        <a href="showTakeBook">Список выданных книг</a>
+        <a href="showTakeBooks">Список выданных книг</a>
         <a href="showTakeBookToReader">Выдать книгу</a><br>
         <a href="showUserRoles">Назначение ролей пользователям</a>
         <br><br>

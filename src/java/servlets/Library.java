@@ -39,8 +39,7 @@ import util.PageReturner;
     "/showReaders",
     "/showTakeBookToReader",
     "/takeBookToReader",
-    "/takeBook",
-    "/showTakeBook",
+    "/showTakeBooks",
     "/returnBook",
     "/deleteBook",
     
@@ -154,7 +153,7 @@ public class Library extends HttpServlet {
             request.setAttribute("listUsers", userFacade.findAll());
             request.getRequestDispatcher(PageReturner.getPage("showTakeBookToReader")).forward(request, response);
             break;
-        case "/showTakeBook":{
+        case "/showTakeBooks":{
             if(!sl.isRole(regUser, "ADMIN")){
                 request.setAttribute("info", "У вас нет прав доступа к ресурсу");
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
