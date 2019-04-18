@@ -1,6 +1,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<link rel="stylesheet" href="css/showLogin.css">
+<div class="colorBack">
         <h1>Введите логин и пароль</h1>
         ${info}<br>
         <form action="login" method="POST" onsubmit="return validate()" name="form1" id="_form1">
@@ -14,4 +15,4 @@
         </form><br><br>
         <a href="newReader">Зарегистрироваться</a>
         <script src="${pageContext.request.contextPath}/js/showLogin.js"></script>
-    
+</div>   

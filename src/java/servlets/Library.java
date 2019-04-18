@@ -36,8 +36,9 @@ import util.PageReturner;
     "/newReader",
     "/addReader",
     "/showBooks",
-    "/showReader",
-    "/library",
+    "/showReaders",
+    "/showTakeBookToReader",
+    "/takeBookToReader",
     "/takeBook",
     "/showTakeBook",
     "/returnBook",
@@ -130,7 +131,7 @@ public class Library extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
                 break;
             }
-        case "/showReader":
+        case "/showReaders":
             if(!sl.isRole(regUser, "ADMIN")){
                 request.setAttribute("info", "У вас нет прав доступа к ресурсу");
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
@@ -141,7 +142,7 @@ public class Library extends HttpServlet {
             request.setAttribute("listReader", listUsers);
             request.getRequestDispatcher(PageReturner.getPage("listReader")).forward(request, response);
             break;
-        case "/library":
+        case "/showTakeBookToReader":
             if(!sl.isRole(regUser, "ADMIN")){
                 request.setAttribute("info", "У вас нет прав доступа к ресурсу");
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
@@ -150,8 +151,8 @@ public class Library extends HttpServlet {
             } 
             List<Book>listBooks = bookFacade.findActived(true);
             if(listBooks != null) request.setAttribute("listBooks", listBooks);
-            request.setAttribute("listReader", userFacade.findAll());
-            request.getRequestDispatcher(PageReturner.getPage("takeBook")).forward(request, response);
+            request.setAttribute("listUsers", userFacade.findAll());
+            request.getRequestDispatcher(PageReturner.getPage("showTakeBookToReader")).forward(request, response);
             break;
         case "/showTakeBook":{
             if(!sl.isRole(regUser, "ADMIN")){
@@ -165,7 +166,7 @@ public class Library extends HttpServlet {
             request.getRequestDispatcher(PageReturner.getPage("listTakeBook")).forward(request, response);
                 break;
             }
-        case "/takeBook":{
+        case "/takeBookToReader":{
             if(!sl.isRole(regUser, "ADMIN")){
                 request.setAttribute("info", "У вас нет прав доступа к ресурсу");
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))

@@ -13,7 +13,7 @@
     </head>
     <body>
         <h1>Библиотека</h1>
-        <form action="takeBook" method="POST" name="form1">
+        <form action="takeBookToReader" method="POST" name="form1">
             <h2>Список книг</h2>
             <select name="selectedBook">
                 <c:forEach var="book" items="${listBooks}">
@@ -22,8 +22,8 @@
             </select>
                 <h2>Список читателей</h2>
             <select name="selectedReader">
-                <c:forEach var="reader" items="${listReader}">
-                    <option value="${reader.id}">${reader.name} ${reader.surname}</option>
+                <c:forEach var="user" items="${listUsers}">
+                    <option value="${user.id}">${user.name} ${user.surname}</option>
                 </c:forEach>
             </select>
                 <button type="submit" name="takeBook">Выдать книгу</button>

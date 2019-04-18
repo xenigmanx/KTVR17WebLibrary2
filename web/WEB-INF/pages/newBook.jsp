@@ -11,9 +11,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/newBook.css">
+        
         <title>Новая книга</title>
     </head>
-    <body>
+    <body class="colorBack">
+      <div class="colorBack">
+
         <h1>Добавляем в библиотеку новую книгу</h1>
         <form action="addBook" method="POST" name="form1" onsubmit="return validate();" id="form1">
              Название:<br>
@@ -29,7 +32,7 @@
             <br>
             <input type="submit" value="Добавить">
         </form><br>
-        
+      </div>   
         <script src="${pageContext.request.contextPath}/js/newBook.js"></script>
     </body>
 </html>
