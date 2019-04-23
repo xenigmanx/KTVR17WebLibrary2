@@ -16,7 +16,7 @@
     </head>
     <body class="colorBack">
       <div class="colorBack">
-
+           <a href="welcome">Главная страница</a>
         <h1>Добавляем в библиотеку новую книгу</h1>
         <form action="addBook" method="POST" name="form1" onsubmit="return validate();" id="form1">
              Название:<br>

@@ -13,6 +13,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <a href="welcome">Главная страница</a>
         <h1>Назначение ролей!</h1>
         <form action="changeUserRole" method="POST">
             <table>

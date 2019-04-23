@@ -12,6 +12,7 @@
         <title>Новая роль</title>
     </head>
     <body>
+        <a href="welcome">Главная страница</a>
         <h1>Добавляем новую роль</h1>
         ${info}
         <form action="addRole" method="POST" name="form1" id="_form1">
