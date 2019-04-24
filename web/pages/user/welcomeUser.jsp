@@ -3,11 +3,8 @@
 <div class="colorBack">
         <h1>Добро пожаловать в нашу библиотеку</h1>
         <p>${info}</p>
-        <h3>
-            <a href="showLogin">Водите</a> 
-            или 
-            <a href="newUser">зарегистрируйтесь</a>
-        </h3>
-        
+        <br>
+        <a href="logout">Выйти из системы</a><br>
+        <a href="showBooks">Список книг</a><br>
  </div>       
    

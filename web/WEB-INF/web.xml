@@ -11,7 +11,9 @@
     <jsp-config>
         <jsp-property-group>
             <display-name>template1</display-name>
+            <url-pattern>/pages/admin/welcomeAdmin.jsp</url-pattern>
             <url-pattern>/showLogin.jsp</url-pattern>
+            <url-pattern>/pages/user/welcomeUser.jsp</url-pattern>
             <url-pattern>/welcome.jsp</url-pattern>
             <page-encoding>UTF-8</page-encoding>
             <include-prelude>/WEB-INF/jspf/header.jspf</include-prelude>

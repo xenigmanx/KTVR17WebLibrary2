@@ -28,7 +28,6 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.RoleFacade;
 import session.UserFacade;
-import util.EncriptPass;
 import util.PageReturner;
 
 /**
@@ -39,7 +38,7 @@ import util.PageReturner;
     "/newBook",
     "/addBook",
 
-    "/showBooks",
+    
     "/showUsers",
     "/showTakeBookToReader",
     "/takeBookToReader",
@@ -103,13 +102,7 @@ public class AdminController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
                     break;
                 }
-            case "/showBooks":{
-                List<Book> listBooks = bookFacade.findActived(true);
-                request.setAttribute("role", sl.getRole(regUser));
-                request.setAttribute("listBooks", listBooks);
-                request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-                    break;
-                }
+            
             case "/showUsers":
                 List<User> listUsers = userFacade.findAll();
                 request.setAttribute("listUsers", listUsers);
@@ -211,6 +204,7 @@ public class AdminController extends HttpServlet {
                 break;
 
             default:
+                request.setAttribute("info", "Нет такой станицы!");
                 request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
                 break;
         }

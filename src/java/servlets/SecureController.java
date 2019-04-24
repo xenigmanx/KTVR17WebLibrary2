@@ -34,7 +34,6 @@ import util.PageReturner;
     "/login",
     "/logout",
     "/showLogin",
-    "/welcome",
     "/newUser",
     "/addUser",
     
@@ -100,10 +99,6 @@ public class SecureController extends HttpServlet {
         String path = request.getServletPath();
         
         switch (path) {
-            case "/welcome":
-                request.getRequestDispatcher(PageReturner.getPage("welcome"))
-                        .forward(request, response);
-                break;
             case "/login":
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
@@ -122,7 +117,7 @@ public class SecureController extends HttpServlet {
                     session.setAttribute("regUser", regUser);
                     request.setAttribute("info", "Привет "+regUser.getName()
                             +"! Вы вошли в систему.");
-                    request.getRequestDispatcher(PageReturner.getPage("welcome"))
+                    request.getRequestDispatcher("/welcome")
                             .forward(request, response);
                     break;
                 }
@@ -168,7 +163,10 @@ public class SecureController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("welcome"))
                         .forward(request, response);
                     break;
-                
+             default:
+                request.setAttribute("info", "Нет такой станицы!");
+                request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
+                break;
             
         }
     }
