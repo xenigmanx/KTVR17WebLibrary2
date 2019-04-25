@@ -52,13 +52,18 @@ public class WelcomeController extends HttpServlet {
         }
         if(regUser == null){
             request.setAttribute("info", "Войдите или зарегистрируйтесь");
-            request.getRequestDispatcher(PageReturner.getPage("showLogin"))
+            request.getRequestDispatcher(PageReturner.getPage("index"))
                     .forward(request, response);
             return;
         }
         if(sl.isRole(regUser, "ADMIN")){
             request.setAttribute("info", "Вы вошли как admin");
             request.getRequestDispatcher(PageReturner.getPage("welcomeAdmin"))
+                    .forward(request, response);
+            return;
+        }else if(sl.isRole(regUser, "MANAGER")){
+            request.setAttribute("info", "Вы вошли как manager");
+            request.getRequestDispatcher(PageReturner.getPage("welcomeManager"))
                     .forward(request, response);
             return;
         }else if(sl.isRole(regUser, "USER")){
@@ -68,7 +73,7 @@ public class WelcomeController extends HttpServlet {
             return;
         }else{
             request.setAttribute("info", "Вы должны войти для пользования библиотекой");
-            request.getRequestDispatcher(PageReturner.getPage("welcome"))
+            request.getRequestDispatcher(PageReturner.getPage("index"))
                     .forward(request, response);
             return;
         }

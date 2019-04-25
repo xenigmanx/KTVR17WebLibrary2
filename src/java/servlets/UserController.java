@@ -74,7 +74,7 @@ public class UserController extends HttpServlet {
                 request.setAttribute("role", sl.getRole(regUser));
                 request.setAttribute("listBooks", listBooks);
                 request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-                    break;
+                break;
             default:
                 request.setAttribute("info", "Нет такой станицы!");
                 request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);

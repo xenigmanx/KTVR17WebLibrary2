@@ -5,12 +5,9 @@
  */
 package servlets;
 
-import entity.Book;
-import entity.History;
 import entity.User;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +21,6 @@ import javax.servlet.http.HttpSession;
 import secure.Role;
 import secure.SecureLogic;
 import secure.UserRoles;
-import session.BookFacade;
-import session.HistoryFacade;
 import session.RoleFacade;
 import session.UserFacade;
 import util.PageReturner;
@@ -35,27 +30,22 @@ import util.PageReturner;
  * @author Melnikov
  */
 @WebServlet(name = "AdminController", urlPatterns = {
-    "/newBook",
-    "/addBook",
-
-    
-    "/showUsers",
-    "/showTakeBookToReader",
-    "/takeBookToReader",
-    "/showTakeBooks",
-    "/returnBook",
-    "/deleteBook",
     "/showUserRoles",
-    "/changeUserRole"
+    "/changeUserRole",
     
 })
 public class AdminController extends HttpServlet {
-    
-@EJB BookFacade bookFacade;
-@EJB UserFacade userFacade;
-@EJB HistoryFacade historyFacade;
-@EJB RoleFacade roleFacade;
-    
+    @EJB UserFacade userFacade;
+    @EJB RoleFacade roleFacade;
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -82,90 +72,11 @@ public class AdminController extends HttpServlet {
                     .forward(request, response);
             return;
         } 
-        
         String path = request.getServletPath();
-        
         switch (path) {
-            
-            case "/newBook":
-                request.getRequestDispatcher(PageReturner.getPage("newBook")).forward(request, response);
-                break;
-            case "/addBook":{
-                String nameBook = request.getParameter("nameBook");
-                String author = request.getParameter("author");
-                String yearPublished = request.getParameter("yearPublished");
-                String isbn = request.getParameter("isbn");
-                String countStr = request.getParameter("count");
-                Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
-                bookFacade.create(book);
-                request.setAttribute("book", book);
-                request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
-                    break;
-                }
-            
-            case "/showUsers":
-                List<User> listUsers = userFacade.findAll();
-                request.setAttribute("listUsers", listUsers);
-                request.getRequestDispatcher(PageReturner.getPage("listUsers")).forward(request, response);
-                break;
-            case "/showTakeBookToReader":
-                List<Book>listBooks = bookFacade.findActived(true);
-                if(listBooks != null) request.setAttribute("listBooks", listBooks);
-                request.setAttribute("listUsers", userFacade.findAll());
-                request.getRequestDispatcher(PageReturner.getPage("showTakeBookToReader")).forward(request, response);
-                break;
-            case "/showTakeBooks":{
-                List<History> takeBooks = historyFacade.findTakeBooks();
-                request.setAttribute("takeBooks", takeBooks);
-                request.getRequestDispatcher(PageReturner.getPage("listTakeBook")).forward(request, response);
-                    break;
-                }
-            case "/takeBookToReader":{
-                String selectedBook = request.getParameter("selectedBook");
-                String selectedUser = request.getParameter("selectedUser");
-                Book book = bookFacade.find(new Long(selectedBook));
-
-                User user = userFacade.find(new Long(selectedUser));
-                Calendar c = new GregorianCalendar();
-                if(book.getCount()>0){
-                    book.setCount(book.getCount()-1);
-                    bookFacade.edit(book);
-                    History history = new History(book, user, c.getTime(), null);
-                    historyFacade.create(history);
-                }else{
-                    request.setAttribute("info", "Все книги выданы");
-                }
-                List<History> takeBooks = historyFacade.findTakeBooks();
-                request.setAttribute("takeBooks", takeBooks);
-                request.getRequestDispatcher(PageReturner.getPage("listTakeBook")).forward(request, response);
-                    break;
-                }
-            case "/returnBook":{
-                String historyId = request.getParameter("historyId");
-                History history = historyFacade.find(new Long(historyId));
-                Calendar c = new GregorianCalendar();
-                history.setDateReturn(c.getTime());
-                history.getBook().setCount(history.getBook().getCount()+1);
-                historyFacade.edit(history);
-                List<History> takeBooks = historyFacade.findTakeBooks();
-                request.setAttribute("takeBooks", takeBooks);
-                request.getRequestDispatcher(PageReturner.getPage("listTakeBook")).forward(request, response);
-                    break;
-                }
-            case "/deleteBook":{
-                String deleteBookId = request.getParameter("deleteBookId");
-                Book book = bookFacade.find(new Long(deleteBookId));
-                book.setActive(Boolean.FALSE);
-                bookFacade.edit(book);
-                //historyFacade.remove(deleteBookId);
-                listBooks = bookFacade.findActived(true);
-                request.setAttribute("listBooks", listBooks);
-                request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
-                    break;
-                }
             case "/showUserRoles":
                 Map<User,String> mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();
+                List<User> listUsers = userFacade.findAll();
                 int n = listUsers.size();
                 for(int i=0;i<n;i++){
                     mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
@@ -202,10 +113,9 @@ public class AdminController extends HttpServlet {
                 request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
                         .forward(request, response);
                 break;
-
             default:
                 request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("welcome")).forward(request, response);
+                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
                 break;
         }
     }
