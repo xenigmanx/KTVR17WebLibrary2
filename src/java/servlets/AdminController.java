@@ -7,10 +7,7 @@ package servlets;
 
 import entity.User;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +15,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import secure.Role;
 import secure.SecureLogic;
-import secure.UserRoles;
 import session.RoleFacade;
 import session.UserFacade;
+import util.EncriptPass;
 import util.PageReturner;
 
 /**
@@ -30,8 +26,8 @@ import util.PageReturner;
  * @author Melnikov
  */
 @WebServlet(name = "AdminController", urlPatterns = {
-    "/showUserRoles",
-    "/changeUserRole",
+    "/showChangePassword",
+    "/changePassword",
     
 })
 public class AdminController extends HttpServlet {
@@ -74,49 +70,29 @@ public class AdminController extends HttpServlet {
         } 
         String path = request.getServletPath();
         switch (path) {
-            case "/showUserRoles":
-                Map<User,String> mapUsers = new HashMap<>();
+            case "/showChangePassword":
                 List<User> listUsers = userFacade.findAll();
-                int n = listUsers.size();
-                for(int i=0;i<n;i++){
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-                }
-                List<Role> listRoles = roleFacade.findAll();
-                request.setAttribute("mapUsers", mapUsers);
-                request.setAttribute("listRoles", listRoles);
-                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+                request.setAttribute("listUsers", listUsers);
+                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
                         .forward(request, response);
                 break;
-            case "/changeUserRole":
-                String setButton = request.getParameter("setButton");
-                String deleteButton = request.getParameter("deleteButton");
-                String userId = request.getParameter("user");
-                String roleId = request.getParameter("role");
+            case "/changePassword":
+                String userId = request.getParameter("userId");
+                String newpassword = request.getParameter("newpassword");
                 User user = userFacade.find(new Long(userId));
-                Role roleToUser = roleFacade.find(new Long(roleId));
-                UserRoles ur = new UserRoles(user, roleToUser);
-                if(setButton != null){
-                    sl.addRoleToUser(ur);
-                }
-                if(deleteButton != null){
-                    sl.deleteRoleToUser(ur.getUser());
-                }
-                mapUsers = new HashMap<>();
-                listUsers = userFacade.findAll();   
-                n = listUsers.size();
-                for(int i=0;i<n;i++){
-                    mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
-                }
-                request.setAttribute("mapUsers", mapUsers);
-                List<Role> newListRoles = roleFacade.findAll();
-                request.setAttribute("listRoles", newListRoles);
-                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+                EncriptPass ep = new EncriptPass();
+                String salts = ep.createSalts();
+                String encriptPass = ep.setEncriptPass(newpassword, salts);
+                user.setPassword(encriptPass);
+                user.setSalts(salts);
+                userFacade.edit(user);
+                request.setAttribute("info", "Пароль изменен!");
+                listUsers = userFacade.findAll();
+                request.setAttribute("listUsers", listUsers);
+                request.getRequestDispatcher(PageReturner.getPage("showChangePassword"))
                         .forward(request, response);
                 break;
-            default:
-                request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
-                break;
+            
         }
     }
 

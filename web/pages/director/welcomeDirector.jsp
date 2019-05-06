@@ -9,9 +9,8 @@
         <a href="showBooks">Список книг</a><br>
         <a href="newBook">Добавить книгу</a><br>
         <a href="showUsers">Список читателей</a><br>
-        <a href="showTakeBooks">Список выданных книг</a><br>
+        <a href="showTakeBooks">Список выданных книг</a>
         <a href="showTakeBookToReader">Выдать книгу</a><br>
-        <a href="showUserRoles">Назначить роль пользователю</a><br>
-        <a href="showChangePassword">Измененить пароля пользователю</a>
+        <a href="showUserRoles">Назначение ролей пользователям</a>
  </div>       
    

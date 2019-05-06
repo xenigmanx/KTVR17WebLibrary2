@@ -5,10 +5,11 @@
  */
 package servlets;
 
-import entity.Book;
 import entity.User;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,20 +17,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import secure.Role;
 import secure.SecureLogic;
-import session.BookFacade;
+import secure.UserRoles;
+import session.RoleFacade;
+import session.UserFacade;
 import util.PageReturner;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "UserController", urlPatterns = {
-    "/showBooks",
-
+@WebServlet(name = "DirectorController", urlPatterns = {
+    "/showUserRoles",
+    "/changeUserRole",
+    
 })
-public class UserController extends HttpServlet {
-    @EJB BookFacade bookFacade;
+public class DirectorController extends HttpServlet {
+    @EJB UserFacade userFacade;
+    @EJB RoleFacade roleFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,8 +48,7 @@ public class UserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        
+        request.setCharacterEncoding("UTF8");
         HttpSession session = request.getSession(false);
         SecureLogic sl = new SecureLogic();
         User regUser = null;
@@ -60,20 +65,56 @@ public class UserController extends HttpServlet {
                     .forward(request, response);
             return;
         }
-        if(!sl.isRole(regUser, "USER")){
+        if(!sl.isRole(regUser, "DIRECTOR")){
             request.setAttribute("info", "У вас нет прав доступа к ресурсу");
             request.getRequestDispatcher(PageReturner.getPage("showLogin"))
                     .forward(request, response);
             return;
         } 
-        
         String path = request.getServletPath();
         switch (path) {
-            case "/showBooks":
-                List<Book> listBooks = bookFacade.findActived(true);
-                request.setAttribute("role", sl.getRole(regUser));
-                request.setAttribute("listBooks", listBooks);
-                request.getRequestDispatcher(PageReturner.getPage("listBook")).forward(request, response);
+            case "/showUserRoles":
+                Map<User,String> mapUsers = new HashMap<>();
+                List<User> listUsers = userFacade.findAll();
+                int n = listUsers.size();
+                for(int i=0;i<n;i++){
+                    if(!"ADMIN".equals(sl.getRole(listUsers.get(i)))){
+                        mapUsers.put(listUsers.get(i), sl.getRole(listUsers.get(i)));
+                    }
+                }
+                List<Role> listRoles = roleFacade.findAll();
+                for(int i=0;i<listRoles.size();i++){
+                    if("ADMIN".equals(listRoles.get(i).getName())){
+                        listRoles.remove(i);
+                    }
+                }
+                request.setAttribute("mapUsers", mapUsers);
+                request.setAttribute("listRoles", listRoles);
+                request.getRequestDispatcher(PageReturner.getPage("showUserRoles"))
+                        .forward(request, response);
+                break;
+            case "/changeUserRole":
+                String setButton = request.getParameter("setButton");
+                String deleteButton = request.getParameter("deleteButton");
+                String userId = request.getParameter("user");
+                String roleId = request.getParameter("role");
+                User user = userFacade.find(new Long(userId));
+                if(roleId != null){
+                    Role roleToUser = roleFacade.find(new Long(roleId));
+                    if("ADMIN".equals(roleToUser.getName())){
+                        request.getRequestDispatcher("/showUserRoles").forward(request, response);
+                        break;
+                    }
+                    UserRoles ur = new UserRoles(user, roleToUser);
+                    if(setButton != null){
+                        sl.addRoleToUser(ur);
+                    }
+                }
+                if(deleteButton != null){
+                    sl.deleteRoleToUser(user);
+                }
+                request.getRequestDispatcher("/showUserRoles")
+                        .forward(request, response);
                 break;
             default:
                 request.setAttribute("info", "Нет такой станицы!");

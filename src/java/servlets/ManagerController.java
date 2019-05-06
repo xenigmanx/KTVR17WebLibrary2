@@ -11,9 +11,7 @@ import entity.User;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,9 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import secure.Role;
 import secure.SecureLogic;
-import secure.UserRoles;
 import session.BookFacade;
 import session.HistoryFacade;
 import session.RoleFacade;
@@ -93,7 +89,7 @@ public class ManagerController extends HttpServlet {
                 Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
                 bookFacade.create(book);
                 request.setAttribute("book", book);
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                     break;
                 }
             case "/showUsers":
@@ -158,7 +154,7 @@ public class ManagerController extends HttpServlet {
                 }
             default:
                 request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
         }
     }

@@ -59,6 +59,11 @@ public class SecureController extends HttpServlet {
             ur.setUser(user);
             ur.setRole(role);
             userRolesFacade.create(ur);
+            role.setName("DIRECTOR");
+            roleFacade.create(role);
+            ur.setUser(user);
+            ur.setRole(role);
+            userRolesFacade.create(ur);
             role.setName("MANAGER");
             roleFacade.create(role);
             ur.setUser(user);
@@ -119,8 +124,7 @@ public class SecureController extends HttpServlet {
                     session.setAttribute("regUser", regUser);
                     request.setAttribute("info", "Привет "+regUser.getName()
                             +"! Вы вошли в систему.");
-                    request.getRequestDispatcher("/welcome")
-                            .forward(request, response);
+                    request.getRequestDispatcher("/welcome").forward(request, response);
                     break;
                 }
                 request.getRequestDispatcher(PageReturner.getPage("showLogin"))
@@ -166,12 +170,11 @@ public class SecureController extends HttpServlet {
                 session = request.getSession(true);
                 session.setAttribute("regUser", user);
                 request.setAttribute("user", user);
-                request.getRequestDispatcher("/welcome")
-                        .forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
              default:
                 request.setAttribute("info", "Нет такой станицы!");
-                request.getRequestDispatcher(PageReturner.getPage("index")).forward(request, response);
+                request.getRequestDispatcher("/welcome").forward(request, response);
                 break;
             
         }
