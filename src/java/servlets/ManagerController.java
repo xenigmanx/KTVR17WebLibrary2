@@ -6,6 +6,8 @@
 package servlets;
 
 import entity.Book;
+import entity.BookCover;
+import entity.Cover;
 import entity.History;
 import entity.User;
 import java.io.IOException;
@@ -20,7 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import secure.SecureLogic;
+import session.BookCoverFacade;
 import session.BookFacade;
+import session.CoverFacade;
 import session.HistoryFacade;
 import session.RoleFacade;
 import session.UserFacade;
@@ -39,6 +43,7 @@ import util.PageReturner;
     "/showTakeBooks",
     "/returnBook",
     "/deleteBook",
+    "/showUploadFile",
     
     
 })
@@ -48,6 +53,8 @@ public class ManagerController extends HttpServlet {
 @EJB UserFacade userFacade;
 @EJB HistoryFacade historyFacade;
 @EJB RoleFacade roleFacade;
+@EJB CoverFacade coverFacade;
+@EJB BookCoverFacade bookCoverFacade;
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -86,12 +93,20 @@ public class ManagerController extends HttpServlet {
                 String yearPublished = request.getParameter("yearPublished");
                 String isbn = request.getParameter("isbn");
                 String countStr = request.getParameter("count");
+                String coverId = request.getParameter("coverId");
+                Cover cover = coverFacade.find(new Long(coverId));
                 Book book = new Book(nameBook, author, new Integer(yearPublished), isbn, new Integer(countStr));
                 bookFacade.create(book);
+                BookCover bookCover = new BookCover(book, cover);
+                bookCoverFacade.create(bookCover);
                 request.setAttribute("book", book);
                 request.getRequestDispatcher("/welcome").forward(request, response);
                     break;
                 }
+            case "/showUploadFile":
+                request.getRequestDispatcher(PageReturner.getPage("showUploadFile"))
+                        .forward(request, response);
+                break;
             case "/showUsers":
                 List<User> listUsers = userFacade.findAll();
                 request.setAttribute("listUsers", listUsers);
