@@ -83,6 +83,10 @@ public class UserController extends HttpServlet {
                 String bookId = request.getParameter("bookId");
                 Book book = bookFacade.find(new Long(bookId));
                 BookCover bookCover = bookCoverFacade.findByBook(book);
+                request.setAttribute("book", book);
+                request.setAttribute("bookCover", bookCover);
+                request.getRequestDispatcher(PageReturner.getPage("showBook"))
+                        .forward(request, response);
                 break;
             default:
                 request.setAttribute("info", "Нет такой станицы!");

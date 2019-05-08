@@ -12,9 +12,10 @@
         <title>Книга</title>
     </head>
     <body>
+        <link rel="stylesheet" href="css/"
         <h1>Описание выбранной книги</h1>
         Обложка книги:<br>
-        <img src="fileServlet/${cover.name}"><br>
+        <img class="coverImg" src="insertFile/${bookCover.cover.name}"><br>
         Id: ${book.id}<br>
         Название: ${book.nameBook}<br>
         Автор: ${book.author}<br>

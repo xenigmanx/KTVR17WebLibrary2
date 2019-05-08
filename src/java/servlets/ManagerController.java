@@ -85,6 +85,8 @@ public class ManagerController extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/newBook":
+                List<Cover> listCovers = coverFacade.findAll();
+                request.setAttribute("listCovers", listCovers);
                 request.getRequestDispatcher(PageReturner.getPage("newBook")).forward(request, response);
                 break;
             case "/addBook":{
@@ -114,7 +116,9 @@ public class ManagerController extends HttpServlet {
                 break;
             case "/showTakeBookToReader":
                 List<Book>listBooks = bookFacade.findActived(true);
-                if(listBooks != null) request.setAttribute("listBooks", listBooks);
+                if(listBooks != null){
+                    request.setAttribute("listBooks", listBooks);
+                }
                 request.setAttribute("listUsers", userFacade.findAll());
                 request.getRequestDispatcher(PageReturner.getPage("showTakeBookToReader")).forward(request, response);
                 break;

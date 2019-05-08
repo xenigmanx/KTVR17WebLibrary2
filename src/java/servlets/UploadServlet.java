@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +39,7 @@ import util.PageReturner;
 @WebServlet(name = "UploadServlet", urlPatterns = {
     "/uploadFile"
 })
+@MultipartConfig()
 public class UploadServlet extends HttpServlet {
     @EJB CoverFacade coverFacade;
     /**
@@ -89,11 +90,11 @@ public class UploadServlet extends HttpServlet {
                writeToFile(resize(tempFile),path);
                tempFile.delete();
             }
-            String name = request.getParameter("description");
-            Cover cover = new Cover(name, getFileName(filePart));
+            String description = request.getParameter("description");
+            Cover cover = new Cover(getFileName(filePart),description);
             coverFacade.create(cover);
         }        
-        request.getRequestDispatcher("/showAddNewBook").forward(request, response);
+        request.getRequestDispatcher("/newBook").forward(request, response);
     }
     private String getFileName(final Part part){
         final String partHeader = part.getHeader("content-disposition");

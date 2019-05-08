@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -22,7 +23,9 @@ public class BookCover implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @OneToOne
     private Book book;
+    @OneToOne
     private Cover cover;
 
     public BookCover() {
@@ -93,7 +96,7 @@ public class BookCover implements Serializable {
     @Override
     public String toString() {
         return "BookCover{" + "id=" + id 
-                + ", book=" + book.getIsbn()
+                + ", book=" + book.getNameBook()
                 + ", cover=" + cover.getName()
                 + '}';
     }

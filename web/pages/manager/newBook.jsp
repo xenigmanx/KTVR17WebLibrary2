@@ -33,7 +33,7 @@
             <br>
             <select name="coverId">
                 <c:forEach var="cover" items="${listCovers}">
-                    <option value="${cover.id}">${cover.name}</option>
+                    <option value="${cover.id}">${cover.description}</option>
                 </c:forEach>
             </select>
             <br>
