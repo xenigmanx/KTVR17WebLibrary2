@@ -6,8 +6,11 @@
 package servlets;
 
 import entity.User;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,6 +47,30 @@ public class SecureController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        File imagesFolder = new File(PageReturner.getPage("imagesFolder"));
+        if(!imagesFolder.exists()){
+            try {
+                imagesFolder.mkdir();
+            } catch (Exception e) {
+                Logger.getLogger(SecureController.class.getName()).log(
+                        Level.SEVERE, 
+                        "Не существует директории для хранения изображений!",
+                        e
+                );
+            }
+        }
+        File tmp = new File(PageReturner.getPage("tmp"));
+        if(!tmp.exists()){
+            try {
+                tmp.mkdir();
+            } catch (Exception e) {
+                Logger.getLogger(SecureController.class.getName()).log(
+                        Level.SEVERE, 
+                        "Не существует директории для временных файлов!", 
+                        e
+                );
+            }
+        }
         List<User> listUsers = userFacade.findAll();
         if(listUsers.isEmpty()){
             EncriptPass ep = new EncriptPass();
